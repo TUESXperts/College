@@ -1,0 +1,14 @@
+html,
+body {
+    height: 100%;
+}
+.research_parent_row:hover{
+    background-color: #2C3034;
+    cursor: pointer;
+}
+#research_children_table{
+    color: white;
+}
+#no_children_research_nodes{
+    color: white;
+}

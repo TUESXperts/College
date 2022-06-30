@@ -1,0 +1,49 @@
+html,
+body {
+    height: 100%;
+}
+.research_parent_row:hover{
+    background-color: #2C3034;
+    cursor: pointer;
+}
+#research_children_table{
+    color: white;
+}
+#no_children_research_nodes{
+    color: white;
+}
+.button_add_parent, .button_add_child{
+    width: 80%;
+}
+
+.button_remove_parent, .button_remove_child {
+    width: 20%;
+}
+
+.button_add_parent, .button_remove_parent, .button_add_child, .button_remove_child{
+    display: inline-block;
+    height: 50px;
+    text-align: end;
+}
+
+.fas.fa-plus-circle{
+    color: #87D37C;
+}
+
+.fas.fa-minus-circle{
+    color: #D24D57;
+}
+
+.fas.fa-plus-circle, .fas.fa-minus-circle{
+    font-size: 25px;
+}
+
+.fas.fa-plus-circle:hover{
+    cursor: pointer;
+    font-size: 28px;
+}
+
+.fas.fa-minus-circle:hover{
+    cursor: pointer;
+    font-size: 28px;
+}
