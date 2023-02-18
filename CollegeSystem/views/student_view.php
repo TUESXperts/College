@@ -1,9 +1,10 @@
-<?php 
+<?php
+<?php
 
 session_start();
 
 include("check_login.php");
-if($_SESSION['role'] != "admin") {
+if($_SESSION['role'] != "student" || $_SESSION['role'] != "admin") {
     include("403_forbidden.php");
     return;
 };
@@ -25,7 +26,7 @@ include("includes/connection.php");
 	<div class="container" style="text-align:center">
         <button class="btn btn-info my-5" style="float:left;">
             <a href="addService.php" class="text-light" >
-                Add Service
+                Load Students
             </a>
         </button>
         <button class="btn btn-info my-5 " style="float:left; margin:5px;">
@@ -68,7 +69,7 @@ include("includes/connection.php");
                             $gender = $row['gender'];
                             $contract_type = $row['contract_type'];
                             $hiring_date = $row['hiring_date'];
-                            
+
                             echo '
                                 <tr>
                                     <th scope="row">' . $i . '</th>
@@ -89,7 +90,7 @@ include("includes/connection.php");
                             $i++;
                         }
                     }
-    
+
                 ?>
             </tbody>
         </table>
