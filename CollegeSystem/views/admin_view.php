@@ -37,7 +37,7 @@ include("../includes/connection.php");
                 <a class="dropdown-item" href="<?=$_SERVER['PHP_SELF'] .'?data=courses'?>">Courses</a>
             </div>
         </div>
-
+        <h3>Table: <?=$_GET['data']?></h3>
                 <?php
 
                 if(!isset($_GET['data'])){
@@ -61,87 +61,14 @@ include("../includes/connection.php");
                         showSingleResultData($collegeTableName, $collegeLabelFields);
                     } else if($_GET['data'] == "departments"){
                         // show departments
-                        $sql="SELECT d.id as id, d.name as name , c.college_name as college, u.firstname as department_chair , f.name as faculty FROM departments as d left join college as c on d.college=c.id left join users as u on d.department_chair=u.id left join faculties as f on d.faculty=f.id";
-                        $result=mysqli_query($connect, $sql);
-
-                        if($result) { ?>
-                                <table class="table table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">College</th>
-                                        <th scope="col">Department Chair</th>
-                                        <th scope="col">Faculty</th>
-                                    </tr>
-                                    </thead>
-                                <tbody>
-                                <?php
-                                  while($row=mysqli_fetch_assoc($result)) {
-                                      extract($row);
-                                      echo '
-                                          <tr>
-                                              <th scope="row">' . $id . '</th>
-                                              <td>'.$name.'</td>
-                                              <td>'.$college.'</td>
-                                              <td>'.$department_chair.'</td>
-                                              <td>'.$faculty.'</td>
-                                              <td>
-                                              <p style = "line-height:1.4">
-                                                  <button class="btn btn-success"><a href="updateEmployee.php?updateid='.$id.'" class="text-light">Edit</a></button>
-                                                  <button class="btn btn-danger"><a href="deleteEmployee.php?deleteid='.$id.'" class="text-light">Delete</a></button>
-                                              </p>
-                                              </td>
-                                          </tr>
-                                      ';
-                                  }
-                        }
-
-                        ?>
-                            </tbody>
-                        </table>
-
-                        <?php
+                        $sql="SELECT d.id as id, d.name as department , c.college_name as college, u.firstname as departmentchair , f.name as faculty FROM departments as d left join college as c on d.college=c.id left join users as u on d.department_chair=u.id left join faculties as f on d.faculty=f.id";
+                        $columns = array("Department", "College", "DepartmentChair", "Faculty");
+                        showMultipleResultsData($sql, $columns);
                     } else if($_GET['data'] == "faculties"){
-                        // show faculties
-                        $sql="SELECT f.id as id, f.name as faculty_name , c.college_name as college FROM faculties as f left join college as c on f.college=c.id";
-                        $result=mysqli_query($connect, $sql);
-
-                        if($result) { ?>
-                            <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">College</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php
-                            while($row=mysqli_fetch_assoc($result)) {
-                                extract($row);
-                                echo '
-                                          <tr>
-                                              <th scope="row">' . $id . '</th>
-                                              <td>'.$faculty_name.'</td>
-                                              <td>'.$college.'</td>
-            
-                                              <td>
-                                              <p style = "line-height:1.4">
-                                                  <button class="btn btn-success"><a href="updateEmployee.php?updateid='.$id.'" class="text-light">Edit</a></button>
-                                                  <button class="btn btn-danger"><a href="deleteEmployee.php?deleteid='.$id.'" class="text-light">Delete</a></button>
-                                              </p>
-                                              </td>
-                                          </tr>
-                                      ';
-                            }
-                        }
-
-                        ?>
-                        </tbody>
-                        </table>
-
-                        <?php
+                       // show faculties
+                       $sql="SELECT f.id as id, f.name as faculty , c.college_name as college FROM faculties as f left join college as c on f.college=c.id";
+                       $columns = array("Faculty", "College");
+                       showMultipleResultsData($sql, $columns);
                     } else if($_GET['data'] == "chancellor"){
                         // show chancellor
                         $chancellorTableName = "users";
@@ -152,138 +79,21 @@ include("../includes/connection.php");
                         );
 
                         showSingleResultData($chancellorTableName, $chancellorLabelFields);
-
                     } else if($_GET['data'] == "professors"){
                         // show professors
                         $sql="SELECT u.id, u.firstname, u.surname, u.username, d.name as department FROM users as u left join departments as d on u.department = d.id where u.role='teacher'";
-                        $result=mysqli_query($connect, $sql);
-
-                        if($result) { ?>
-                            <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Firstname</th>
-                                <th scope="col">Surname</th>
-                                <th scope="col">Username</th>
-                                <th scope="col">Department</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php
-                            while($row=mysqli_fetch_assoc($result)) {
-                                extract($row);
-                                echo '
-                                          <tr>
-                                              <th scope="row">' . $id . '</th>
-                                              <td>'.$firstname.'</td>
-                                              <td>'.$surname.'</td>
-                                              <td>'.$username.'</td>
-                                              <td>'.$department.'</td>
-            
-                                              <td>
-                                              <p style = "line-height:1.4">
-                                                  <button class="btn btn-success"><a href="updateEmployee.php?updateid='.$id.'" class="text-light">Edit</a></button>
-                                                  <button class="btn btn-danger"><a href="deleteEmployee.php?deleteid='.$id.'" class="text-light">Delete</a></button>
-                                              </p>
-                                              </td>
-                                          </tr>
-                                      ';
-                            }
-                        }
-
-                        ?>
-                        </tbody>
-                        </table>
-
-                        <?php
+                        $columns = array("Firstname", "Surname", "Username", "Department");
+                        showMultipleResultsData($sql, $columns);
                     } else if($_GET['data'] == "students"){
                         // show students
                         $sql="SELECT u.id, u.firstname, u.surname, u.username, d.name as department FROM users as u left join departments as d on u.department = d.id where u.role='student'";
-                        $result=mysqli_query($connect, $sql);
-
-                        if($result) { ?>
-                            <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Firstname</th>
-                                <th scope="col">Surname</th>
-                                <th scope="col">Username</th>
-                                <th scope="col">Department</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php
-                            while($row=mysqli_fetch_assoc($result)) {
-                                extract($row);
-                                echo '
-                                          <tr>
-                                              <th scope="row">' . $id . '</th>
-                                              <td>'.$firstname.'</td>
-                                              <td>'.$surname.'</td>
-                                              <td>'.$username.'</td>
-                                              <td>'.$department.'</td>
-            
-                                              <td>
-                                              <p style = "line-height:1.4">
-                                                  <button class="btn btn-success"><a href="updateEmployee.php?updateid='.$id.'" class="text-light">Edit</a></button>
-                                                  <button class="btn btn-danger"><a href="deleteEmployee.php?deleteid='.$id.'" class="text-light">Delete</a></button>
-                                              </p>
-                                              </td>
-                                          </tr>
-                                      ';
-                            }
-                        }
-
-                        ?>
-                        </tbody>
-                        </table>
-
-                        <?php
+                        $columns = array("Firstname", "Surname", "Username", "Department");
+                        showMultipleResultsData($sql, $columns);
                     } else if($_GET['data'] == "courses"){
                         // show courses
-                        // show students
-                        $sql="SELECT c.id, c.name as course_name, u.firstname as teacher, d.name as department FROM courses as c left join users as u on c.teacher=u.id left join departments as d on c.department = d.id";
-                        $result=mysqli_query($connect, $sql);
-
-                        if($result) { ?>
-                            <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Course name</th>
-                                <th scope="col">Teacher</th>
-                                <th scope="col">Department</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php
-                            while($row=mysqli_fetch_assoc($result)) {
-                                extract($row);
-                                echo '
-                                          <tr>
-                                              <th scope="row">' . $id . '</th>
-                                              <td>'.$course_name.'</td>
-                                              <td>'.$teacher.'</td>
-                                              <td>'.$department.'</td>
-            
-                                              <td>
-                                              <p style = "line-height:1.4">
-                                                  <button class="btn btn-success"><a href="updateEmployee.php?updateid='.$id.'" class="text-light">Edit</a></button>
-                                                  <button class="btn btn-danger"><a href="deleteEmployee.php?deleteid='.$id.'" class="text-light">Delete</a></button>
-                                              </p>
-                                              </td>
-                                          </tr>
-                                      ';
-                            }
-                        }
-
-                        ?>
-                        </tbody>
-                        </table>
-
-                        <?php
+                        $sql="SELECT c.id, c.name as course, u.firstname as teacher, d.name as department FROM courses as c left join users as u on c.teacher=u.id left join departments as d on c.department = d.id";
+                        $columns = array("Course", "Teacher", "Department");
+                        showMultipleResultsData($sql, $columns);
                     }
                 }
                 ?>
@@ -317,5 +127,51 @@ include("../includes/connection.php");
             </form>
             <?php
         }
+    }
+
+    function showMultipleResultsData($sql, $columns){
+        global $connect;
+        $result=mysqli_query($connect, $sql);
+
+        if($result) { ?>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <?php
+                        foreach($columns as $column){
+                            echo "<th scope=\"col\">$column</th>";
+                        }
+                        $columnsLowercase = transformColumnsToLowercase($columns);
+                    ?>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                while($row=mysqli_fetch_assoc($result)) {
+                    extract($row);
+                    echo "<tr><th scope=\"row\">" . $id . "</th>";
+                    foreach($columnsLowercase as $column){
+                        echo "<td>" . $$column . "</td>";
+                    } ?>
+
+                     <td>
+                        <p style = "line-height:1.4">
+                           <button class="btn btn-success"><a href="updateEmployee.php?updateid='.$id.'" class="text-light">Edit</a></button>
+                           <button class="btn btn-danger"><a href="deleteEmployee.php?deleteid='.$id.'" class="text-light">Delete</a></button>
+                        </p>
+                     </td>
+                    </tr>
+          <?php
+                } ?>
+                </tbody>
+            </table>
+            <?php
+        }
+    }
+
+    function transformColumnsToLowercase($columns){
+        $resultLowercaseColumns = array_map('strtolower', $columns);
+        return $resultLowercaseColumns;
     }
 ?>
