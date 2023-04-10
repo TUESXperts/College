@@ -28,7 +28,7 @@
               $_SESSION['surname'] = $result['surname'];
               $_SESSION['username'] = $result['username'];
               $_SESSION['role'] = $result['role'];
-              $_SESSION['role_redirect'] = $result['role'] . ".php";
+              $_SESSION['role_redirect'] = "views/" . $result['role'] . "_view" . ".php";
               //print_r($_SESSION);
               header("Location: " . $_SESSION['role_redirect']);
 

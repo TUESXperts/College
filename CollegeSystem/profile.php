@@ -20,14 +20,16 @@ if(isset($_POST['update'])){
 
     extract($_POST);
 
-    
     //$sql="UPDATE users SET id=$id, firstname='$firstname', surname='$surname', username='$username', gender='$gender', role='$role', contract_type='$contract_type', hiring_date='$hiring_date', password='$password' WHERE id=$id";
 
     if($_SESSION['role'] == "admin") {
     	$sql="UPDATE users SET id=$id, username='$username', password='$password' WHERE id=$id";
-    } else if ($_SESSION['role'] == "employee") {
+    } else if ($_SESSION['role'] == "teacher") {
     	$sql="UPDATE users SET id=$id, firstname='$firstname', surname='$surname', gender='$gender', password='$password' WHERE id=$id";
-    } else {
+    } else if($_SESSION['role'] == "head_of_department"){
+        $sql="UPDATE users SET id=$id, username='$username', gender='$gender', password='$password' WHERE id=$id";
+    }
+    else if($_SESSION['role'] == "student"){
     	$sql="UPDATE users SET id=$id, username='$username', gender='$gender', password='$password' WHERE id=$id";
     }
 

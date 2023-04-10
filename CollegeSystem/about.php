@@ -15,7 +15,7 @@ include("includes/connection.php");
         <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet" />
 	<title>About us</title>
-
+F
 	<style>
 * {
   box-sizing: border-box;
