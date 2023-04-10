@@ -25,7 +25,7 @@ include("includes/connection.php");
 	<div class="container" style="text-align:center">
         <button class="btn btn-info my-5" style="float:left;">
             <a href="addService.php" class="text-light" >
-                Add Service
+                Load Students
             </a>
         </button>
         <button class="btn btn-info my-5 " style="float:left; margin:5px;">
