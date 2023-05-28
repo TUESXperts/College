@@ -13,7 +13,12 @@
           <span class="navbar-toggler-icon"></span>
         </button>
                     <li class="nav-item">
-              <a class="nav-link text-white" href="about.php">Home</a>
+                        <?php
+                            $href = $_SERVER['PHP_SELF'];
+                            if(isset($_SESSION['role_redirect'])) $href = $_SESSION['role_redirect'];
+                        ?>
+
+              <a class="nav-link text-white" href="<?=$href?>">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link text-white" href="about.php">About</a>
@@ -28,13 +33,13 @@
                 <a href="<?=$_SESSION['role_redirect']?>" class="nav-link"><?php echo "Hello, " . $_SESSION['firstname'] . " " . $_SESSION['surname'] . "!"; ?></a>
             </li>
 
-            
+
             <li class="nav-item">
               <div class="nav_right">
             <ul>
                 <li class="nr_li dd_main">
-                    <img src="img/profile_pic.png" alt="Profile">
-                    
+                    <img src="/College/img/profile_pic.png" alt="Profile">
+
                     <div class="dd_menu">
                         <div class="dd_right">
                             <ul>

@@ -10,6 +10,25 @@ if($_SESSION['role'] != "admin") {
 
 include("../includes/connection.php");
 
+
+if(isset($_POST['submit']) && $_POST['operation'] == 'save'){
+    extract($_POST);
+    if($table == "college") {
+        $sql = "update college set college_name='$college_name', college_address='college_address'";
+    } else if($table == "users"){
+        $sql = "update users set firstname='$firstname', surname='$surname' where rector_flag='1'";
+    }
+
+    $result=mysqli_query($connect, $sql);
+
+    if($result) {
+        header("Location: " . $_SERVER['REQUEST_URI']);
+    } else {
+        die(mysqli_error($connect));
+    }
+
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -37,12 +56,13 @@ include("../includes/connection.php");
                 <a class="dropdown-item" href="<?=$_SERVER['PHP_SELF'] .'?data=courses'?>">Courses</a>
             </div>
         </div>
-        <h3>Table: <?=$_GET['data']?></h3>
+
                 <?php
 
                 if(!isset($_GET['data'])){
                     // show college data
                     $collegeTableName = "college";
+                    echo "<h3>Default Table: " . $collegeTableName  . "</h3>";
                     $collegeLabelFields = array(
                             "college_name" => "College Name",
                             "college_address"=> "College address"
@@ -50,6 +70,7 @@ include("../includes/connection.php");
 
                     showSingleResultData($collegeTableName, $collegeLabelFields);
                 } else {
+                    echo "<h3>Table: " . $_GET['data']  . "</h3>";
                     if($_GET['data'] == "college"){
                         // show college data
                         $collegeTableName = "college";
@@ -72,13 +93,14 @@ include("../includes/connection.php");
                     } else if($_GET['data'] == "chancellor"){
                         // show chancellor
                         $chancellorTableName = "users";
+                        $whereClause = "rector_flag='1'";
                         $chancellorLabelFields = array(
                             "firstname" => "Firstname",
                             "surname" => "Surname",
                             "role" => "Role"
                         );
 
-                        showSingleResultData($chancellorTableName, $chancellorLabelFields);
+                        showSingleResultData($chancellorTableName, $chancellorLabelFields, $whereClause);
                     } else if($_GET['data'] == "professors"){
                         // show professors
                         $sql="SELECT u.id, u.firstname, u.surname, u.username, d.name as department FROM users as u left join departments as d on u.department = d.id where u.role='teacher'";
@@ -104,16 +126,18 @@ include("../includes/connection.php");
 
 
 <?php
-    function showSingleResultData($table, $columnLabelFields){
+    function showSingleResultData($table, $columnLabelFields, $whereClause=''){
         global $connect;
         $columns = array_keys($columnLabelFields); // fetching all columns
-        $sql="SELECT " . implode(",",$columns) . " FROM " . $table . " limit 1";
+        $sql="SELECT " . implode(",",$columns) . " FROM " . $table;
+        if($whereClause != '') $sql.=" where " . $whereClause;
+        $sql.=" limit 1";
         $result=mysqli_query($connect, $sql);
 
         if($result) {
             $row=mysqli_fetch_assoc($result); ?>
 
-            <form>
+            <form method="POST">
                 <?php
                     foreach ($columnLabelFields as $db_column_name => $column_label ) { ?>
                         <div class="form-group">
@@ -122,8 +146,9 @@ include("../includes/connection.php");
                         </div>
                         <?php
                     } ?>
-
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <input type="hidden" name="table" value="<?=$table?>"/>
+                <input type="hidden" name="operation" value="save"/>
+                <button type="submit" name="submit" class="btn btn-primary">Save</button>
             </form>
             <?php
         }
@@ -133,7 +158,8 @@ include("../includes/connection.php");
         global $connect;
         $result=mysqli_query($connect, $sql);
 
-        if($result) { ?>
+        if($result) {
+            $_SESSION['previous_url'] = $_SERVER['REQUEST_URI']; ?>
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -157,8 +183,8 @@ include("../includes/connection.php");
 
                      <td>
                         <p style = "line-height:1.4">
-                           <button class="btn btn-success"><a href="updateEmployee.php?updateid='.$id.'" class="text-light">Edit</a></button>
-                           <button class="btn btn-danger"><a href="deleteEmployee.php?deleteid='.$id.'" class="text-light">Delete</a></button>
+                           <button class="btn btn-success"><a href="/College/update_user.php?updateid=<?=$id?>" class="text-light">Edit</a></button>
+                           <button class="btn btn-danger"><a href="/College/update_user.php?deleteid=<?=$id?>" class="text-light">Delete</a></button>
                         </p>
                      </td>
                     </tr>
@@ -175,3 +201,4 @@ include("../includes/connection.php");
         return $resultLowercaseColumns;
     }
 ?>
+

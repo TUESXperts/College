@@ -10,6 +10,7 @@ if($_SESSION['role'] != "admin") {
 
 include("includes/connection.php");
 
+// entity ID
 $id = $_GET['updateid'];
 
 if(isset($_POST['update'])){
@@ -21,9 +22,9 @@ if(isset($_POST['update'])){
 
     $result=mysqli_query($connect, $sql);
     if($result) {
-        header('location: admin.php?update_status=success');
+        header('location: admin_view.php?update_status=success');
     } else {
-        header('location: admin.php?update_status=error');
+        header('location: admin_view.php?update_status=error');
     }
     return;
 }
@@ -39,7 +40,7 @@ extract($row);
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Update Employee</title>
+    <title>Update User</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <?php include("includes/header_links.php"); ?>
 </head>
@@ -52,7 +53,7 @@ extract($row);
                 <form method="post">
                     <div class="container my-5">
                         <p style = "line-height:1.4">
-                            <button class="btn btn-dark"><a href="admin.php" class="text-light">Go back</a></button>
+                            <button class="btn btn-dark"><a href="<?=$_SESSION['previous_url']?>" class="text-light">Go back</a></button>
                         </p>
 
                         <div class="form-group">
