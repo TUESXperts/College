@@ -63,10 +63,10 @@
 						<h3 class="text-center my-3">Login</h3>
 						<div class="text-center"><?php echo $output; ?></div>
 						<label>Username</label>
-						<input type="text" name="uname" class="form-control my-2" placeholder="Enter Username" autocomplete="off">
+						<input type="text" name="uname" class="form-control my-2" placeholder="Enter Username" autocomplete="off" value="admin">
 
 						<label>Password</label>
-						<input type="password" name="pass" class="form-control my-2" placeholder="Enter Password">
+						<input type="password" name="pass" class="form-control my-2" placeholder="Enter Password" value="admin">
 
 						<input type="submit" name="login" class="btn btn-success" value="Login">
 					</form>

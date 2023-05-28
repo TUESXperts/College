@@ -2,13 +2,14 @@
 
 session_start();
 
-include("check_login.php");
-if($_SESSION['role'] != "teacher" || $_SESSION['role'] != "admin") {
-    include("403_forbidden.php");
+include("../check_login.php");
+if($_SESSION['role'] != "teacher" && $_SESSION['role'] != "admin") {
+//    var_dump("AZ SUM: " . $_SESSION['role']);
+    include("../403_forbidden.php");
     return;
 };
 
-include("includes/connection.php");
+include("../includes/connection.php");
 
 ?>
 
@@ -16,11 +17,11 @@ include("includes/connection.php");
 <html>
 <head>
     <title>Teachers administration</title>
-    <?php include("includes/header_links.php"); ?>
+    <?php include("../includes/header_links.php"); ?>
 </head>
 <body>
 
-<?php include("includes/header_navigation.php"); ?>
+<?php include("../includes/header_navigation.php"); ?>
 
 <div class="container" style="text-align:center">
     <button class="btn btn-info my-5" style="float:left;">

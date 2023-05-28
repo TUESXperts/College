@@ -22,7 +22,8 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <div class="mx-auto"></div>
           <ul class="navbar-nav">
-            <?php if(isset($_SESSION['user_id'])){ ?>
+            <?php
+            if(isset($_SESSION['user_id'])){ ?>
             <li class="nav-item">
                 <a href="<?=$_SESSION['role_redirect']?>" class="nav-link"><?php echo "Hello, " . $_SESSION['firstname'] . " " . $_SESSION['surname'] . "!"; ?></a>
             </li>
@@ -39,7 +40,7 @@
                             <ul>
                                 <li >View</li>
                                 <li>Edit</li>
-                                <li><a href="logout.php">Log out</a></li>
+                                <li><a href="/College/logout.php">Log out</a></li>
                             </ul>
                         </div>
                     </div>
