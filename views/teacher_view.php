@@ -25,11 +25,11 @@ include("../includes/connection.php");
 
 
 <div class="container" style="text-align:center">
-    <h3>Courses: </h3>
+    <h3>Courses </h3>
 
         <?php
             // show courses
-        $sql="SELECT c.id, c.name as course, d.name as department FROM courses as c left join users as u on c.teacher=u.id where u.id='" . $_SESSION['user_id'] . "' left join departments as d on c.department = d.id";
+        $sql="SELECT c.id, c.name as course, d.name as department FROM courses as c left join users as u on c.teacher=u.id left join departments as d on c.department = d.id where u.id='$_SESSION[user_id]'";
         $columns = array("Course", "Department");
         showMultipleResultsData($sql, $columns);
         ?>
@@ -67,8 +67,7 @@ include("../includes/connection.php");
 
             <td>
                 <p style = "line-height:1.4">
-                    <button class="btn btn-success"><a href="/College/update_user.php?updateid=<?=$id?>" class="text-light">Edit</a></button>
-                    <button class="btn btn-danger"><a href="/College/update_user.php?deleteid=<?=$id?>" class="text-light">Delete</a></button>
+                    <button class="btn btn-success"><a href="/College/views/courseStudents.php?courseid=<?=$id?>" class="text-light">Edit students</a></button>
                 </p>
             </td>
             </tr>
