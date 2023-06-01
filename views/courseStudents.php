@@ -10,6 +10,40 @@ if($_SESSION['role'] != "teacher" && $_SESSION['role'] != "admin") {
 
 include("../includes/connection.php");
 
+
+// AJAX call
+if(isset($_POST['studentid'])){
+    $studentid = $_POST['studentid'];
+    $courseid = $_POST['courseid'];
+
+    if($_POST['command'] == "savemarks"){
+        $studentMarks = $_POST['studentMarks'];
+
+        $sql_query_1 = "select marks from students_courses where course_id=$courseid and student_id=$studentid limit 1";
+        $result_1=mysqli_query($connect, $sql_query_1);
+        if($result_row_1=mysqli_fetch_assoc($result_1)) {
+            if($result_row_1['marks'] == null){
+                // insert query
+                $sql_query_insert = "insert into students_courses set marks='$studentMarks' where course_id=$courseid and student_id=$studentid";
+                $result_2=mysqli_query($connect, $sql_query_insert);
+                echo "success1";
+            } else {
+                // update query
+                $sql_query_insert = "update students_courses set marks='$studentMarks' where course_id=$courseid and student_id=$studentid";
+                $result_2=mysqli_query($connect, $sql_query_insert);
+                echo "success2";
+            }
+            echo "success";
+        } else echo "error";
+    } else if($_POST['command'] == "removestudentfromcourse"){
+        $sql = "delete from students_courses where course_id=$courseid and student_id=$studentid limit 1";
+        $result=mysqli_query($connect, $sql);
+        if($result) echo "success";
+        else "error";
+    }
+
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -66,16 +100,16 @@ function showMultipleResultsData($sql, $columns){
             <?php
             while($row=mysqli_fetch_assoc($result)) {
                 extract($row);
-                echo "<tr><th scope=\"row\">" . $id . "</th>";
+                echo "<tr data-studentid='$id'><th scope=\"row\">" . $id . "</th>";
                 foreach($columnsLowercase as $column){
-                    if($column == "marks") echo '<td><input type="text" value="' . $$column . '"/></td>';
+                    if($column == "marks") echo '<td><input type="text" value="' . $$column . '" data-studentmarksinput="' . $id . '"/></td>';
                     else echo "<td>" . $$column . "</td>";
                 } ?>
 
                 <td>
                     <p style = "line-height:1.4">
-                        <button class="btn btn-success"><a href="/College/courseStudents.php?courseid=<?=$id?>" class="text-light">Save marks</a></button>
-                        <button class="btn btn-danger"><a href="/College/update_user.php?deleteid=<?=$id?>" class="text-light">Remove student from course</a></button>
+                        <button class="btn btn-success" data-savestudentid="<?=$id?>">Save marks</button>
+                        <button class="btn btn-danger" data-removestudentid="<?=$id?>">Remove student from course</button>
 
                     </p>
                 </td>
@@ -93,3 +127,43 @@ function transformColumnsToLowercase($columns){
     return $resultLowercaseColumns;
 }
 ?>
+
+
+<script>
+    $(document).ready(function(){
+        $("button[data-savestudentid]").click(function(){
+            let studentid = $(this).attr("data-savestudentid");
+            let studentMarks = $("input[data-studentmarksinput=" + studentid + "]").val();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const courseid = urlParams.get('courseid');
+            console.log("the course id is: " + courseid);
+
+            $.ajax({
+                url: "courseStudents.php",
+                method: "post",
+                data: {studentid, courseid, studentMarks, command: "savemarks"},
+                success: function(result){
+                    if(result == "success") alert("Marks were successfully updated.");
+                    else alert("There was an error processing your request.");
+                }
+            });
+        });
+
+        $("button[data-removestudentid]").click(function(){
+            let studentid = $(this).attr("data-removestudentid");
+            const urlParams = new URLSearchParams(window.location.search);
+            const courseid = urlParams.get('courseid');
+            
+            $.ajax({
+                url: "courseStudents.php",
+                method: "post",
+                data: {studentid, courseid, command: "removestudentfromcourse"},
+                success: function(result){
+                    if(result == "success") $("tr[data-studentid=" + studentid + "]").remove();
+                    else alert("There was an error processing your request.");
+                }
+            });
+        });
+    });
+</script>
