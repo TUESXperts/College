@@ -14,7 +14,7 @@
         </button>
                     <li class="nav-item">
                         <?php
-                            $href = $_SERVER['PHP_SELF'];
+                            $href = $_SERVER['REQUEST_URI'];
                             if(isset($_SESSION['role_redirect'])) $href = $_SESSION['role_redirect'];
                         ?>
 

@@ -9,6 +9,7 @@ if($_SESSION['role'] != "admin") {
 };
 
 include("../includes/connection.php");
+include("../common-functions.php");
 
 
 if(isset($_POST['submit']) && $_POST['operation'] == 'save'){
@@ -123,82 +124,4 @@ if(isset($_POST['submit']) && $_POST['operation'] == 'save'){
     </div>
 </body>
 </html>
-
-
-<?php
-    function showSingleResultData($table, $columnLabelFields, $whereClause=''){
-        global $connect;
-        $columns = array_keys($columnLabelFields); // fetching all columns
-        $sql="SELECT " . implode(",",$columns) . " FROM " . $table;
-        if($whereClause != '') $sql.=" where " . $whereClause;
-        $sql.=" limit 1";
-        $result=mysqli_query($connect, $sql);
-
-        if($result) {
-            $row=mysqli_fetch_assoc($result); ?>
-
-            <form method="POST">
-                <?php
-                    foreach ($columnLabelFields as $db_column_name => $column_label ) { ?>
-                        <div class="form-group">
-                            <label for="field"><?=$column_label?></label>
-                            <input type="text" id="field" class="form-control" placeholder="Enter <?=$column_label?>" value="<?=$row[$db_column_name]?>">
-                        </div>
-                        <?php
-                    } ?>
-                <input type="hidden" name="table" value="<?=$table?>"/>
-                <input type="hidden" name="operation" value="save"/>
-                <button type="submit" name="submit" class="btn btn-primary">Save</button>
-            </form>
-            <?php
-        }
-    }
-
-    function showMultipleResultsData($sql, $columns){
-        global $connect;
-        $result=mysqli_query($connect, $sql);
-
-        if($result) {
-            $_SESSION['previous_url'] = $_SERVER['REQUEST_URI']; ?>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <?php
-                        foreach($columns as $column){
-                            echo "<th scope=\"col\">$column</th>";
-                        }
-                        $columnsLowercase = transformColumnsToLowercase($columns);
-                    ?>
-                </tr>
-                </thead>
-                <tbody>
-                <?php
-                while($row=mysqli_fetch_assoc($result)) {
-                    extract($row);
-                    echo "<tr><th scope=\"row\">" . $id . "</th>";
-                    foreach($columnsLowercase as $column){
-                        echo "<td>" . $$column . "</td>";
-                    } ?>
-
-                     <td>
-                        <p style = "line-height:1.4">
-                           <button class="btn btn-success"><a href="/College/update_user.php?updateid=<?=$id?>" class="text-light">Edit</a></button>
-                           <button class="btn btn-danger"><a href="/College/update_user.php?deleteid=<?=$id?>" class="text-light">Delete</a></button>
-                        </p>
-                     </td>
-                    </tr>
-          <?php
-                } ?>
-                </tbody>
-            </table>
-            <?php
-        }
-    }
-
-    function transformColumnsToLowercase($columns){
-        $resultLowercaseColumns = array_map('strtolower', $columns);
-        return $resultLowercaseColumns;
-    }
-?>
 

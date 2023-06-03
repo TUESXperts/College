@@ -10,6 +10,7 @@ if($_SESSION['role'] != "teacher" && $_SESSION['role'] != "admin") {
 };
 
 include("../includes/connection.php");
+include("../common-functions.php");
 
 ?>
 
@@ -31,56 +32,13 @@ include("../includes/connection.php");
             // show courses
         $sql="SELECT c.id, c.name as course, d.name as department FROM courses as c left join users as u on c.teacher=u.id left join departments as d on c.department = d.id where u.id='$_SESSION[user_id]'";
         $columns = array("Course", "Department");
-        showMultipleResultsData($sql, $columns);
+        // prepare custom buttons
+        $buttons=array(
+            "updateStudentsForCourse"=>array("color"=>"success","label"=>"Edit"),
+            "delete"=>array("color"=>"danger","label"=>"Delete")
+        );
+        showMultipleResultsData($sql, $columns, $buttons);
         ?>
 </div>
 </body>
 </html>
-
-<?php
-    function showMultipleResultsData($sql, $columns){
-    global $connect;
-    $result=mysqli_query($connect, $sql);
-
-    if($result) {
-    $_SESSION['previous_url'] = $_SERVER['REQUEST_URI']; ?>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <?php
-            foreach($columns as $column){
-                echo "<th scope=\"col\">$column</th>";
-            }
-            $columnsLowercase = transformColumnsToLowercase($columns);
-            ?>
-        </tr>
-        </thead>
-        <tbody>
-        <?php
-        while($row=mysqli_fetch_assoc($result)) {
-            extract($row);
-            echo "<tr><th scope=\"row\">" . $id . "</th>";
-            foreach($columnsLowercase as $column){
-                echo "<td>" . $$column . "</td>";
-            } ?>
-
-            <td>
-                <p style = "line-height:1.4">
-                    <button class="btn btn-success"><a href="/College/views/courseStudents.php?courseid=<?=$id?>" class="text-light">Edit students</a></button>
-                </p>
-            </td>
-            </tr>
-            <?php
-        } ?>
-        </tbody>
-    </table>
-<?php
-}
-}
-
-function transformColumnsToLowercase($columns){
-    $resultLowercaseColumns = array_map('strtolower', $columns);
-    return $resultLowercaseColumns;
-}
-?>

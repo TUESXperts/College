@@ -3,12 +3,13 @@ session_start();
 
 include("../check_login.php");
 if($_SESSION['role'] != "teacher" && $_SESSION['role'] != "admin") {
-//    var_dump("AZ SUM: " . $_SESSION['role']);
     include("../403_forbidden.php");
     return;
 };
 
 include("../includes/connection.php");
+
+$_SESSION['previous_url'] = $_SERVER['REQUEST_URI'];
 
 
 // AJAX call
@@ -26,12 +27,10 @@ if(isset($_POST['studentid'])){
                 // insert query
                 $sql_query_insert = "insert into students_courses set marks='$studentMarks' where course_id=$courseid and student_id=$studentid";
                 $result_2=mysqli_query($connect, $sql_query_insert);
-                echo "success1";
             } else {
                 // update query
                 $sql_query_insert = "update students_courses set marks='$studentMarks' where course_id=$courseid and student_id=$studentid";
                 $result_2=mysqli_query($connect, $sql_query_insert);
-                echo "success2";
             }
             echo "success";
         } else echo "error";
@@ -58,7 +57,10 @@ if(isset($_POST['studentid'])){
 
 
 <div class="container" style="text-align:center;display: flex;flex-direction: column;">
-    <button class="btn btn-dark" style="width: max-content;"><a href="<?=$_SESSION['previous_url']?>" class="text-light">Go back to courses</a></button>
+    <div style="display: flex; justify-content: space-between;">
+        <button class="btn btn-dark" style="width: max-content;"><a href="<?=$_SESSION['previous_url']?>" class="text-light">Go back to courses</a></button>
+        <button class="btn btn-primary" style="width: max-content;"><a href="/College/addButtonHandler.php?command=addStudentToCourse&courseid=<?=$_GET["courseid"]?>" class="text-light"><img src="../static/icons/plus.png" style="height: 25px;"/> Add student to this course</a></button>
+    </div>
     <?php
         $course_name = "";
         $sql = "select name from courses where id=$_GET[courseid] limit 1";
