@@ -27,9 +27,9 @@ function showSingleResultData($table, $columnLabelFields, $whereClause=''){
     }
 }
 
-function showMultipleResultsData($sql, $columns, $buttons=null){
+function showMultipleResultsData($sql, $columns, $buttons="default"){
 
-    if($buttons == null){ // check if the function is called with custom $buttons
+    if($buttons == "default"){ // check if the function is called with custom $buttons
         // using the default buttons otherwise
         $buttons=array(
             "update"=>array("color"=>"success","label"=>"Edit"),
@@ -61,17 +61,22 @@ function showMultipleResultsData($sql, $columns, $buttons=null){
                 echo "<tr><th scope=\"row\">" . $id . "</th>";
                 foreach($columnsLowercase as $column){
                     echo "<td>" . $$column . "</td>";
-                } ?>
+                }
+
+                if($buttons!=null){
+                ?>
 
                 <td>
                     <p style = "line-height:1.4">
                         <?php
                             foreach($buttons as $button_command=>$button_attributes){
-                                    echo '<button style="margin-right:10px;" class="btn btn-' . $button_attributes['color'] . '"><a href="/College/update_handler.php?command=' . $button_command . '&id=' . $id . '" class="text-light">' . $button_attributes['label'] . '</a></button>';
+                                    echo '<button command-attr="'. $button_command .'" style="margin-right:10px;" id="'. $id .'" class="btn btn-'. $button_attributes['color'] .'"><a href="/College/update_handler.php?command='. $button_command .'&id=' . $id . '" class="text-light">' . $button_attributes['label'] . '</a></button>';
                             }
                         ?>
                     </p>
                 </td>
+                    <?php
+                } ?>
                 </tr>
                 <?php
             } ?>
