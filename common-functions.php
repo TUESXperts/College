@@ -59,8 +59,16 @@ function showMultipleResultsData($sql, $columns, $buttons="default"){
             while($row=mysqli_fetch_assoc($result)) {
                 extract($row);
                 echo "<tr><th scope=\"row\">" . $id . "</th>";
-                foreach($columnsLowercase as $column){
-                    echo "<td>" . $$column . "</td>";
+                if($_SESSION['role'] == "admin"){
+                    foreach($columnsLowercase as $column){
+                        ?>
+                        <td><input name="<?=$column?>" value="<?=$$column?>"\></td>
+                        <?php
+                    }
+                } else {
+                    foreach($columnsLowercase as $column){
+                        echo "<td>" . $$column . "</td>";
+                    }
                 }
 
                 if($buttons!=null){
@@ -91,3 +99,7 @@ function transformColumnsToLowercase($columns){
     return $resultLowercaseColumns;
 }
 ?>
+
+<script>
+
+</script>

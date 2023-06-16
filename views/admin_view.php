@@ -85,7 +85,11 @@ if(isset($_POST['submit']) && $_POST['operation'] == 'save'){
                         // show departments
                         $sql="SELECT d.id as id, d.name as department , c.college_name as college, u.firstname as departmentchair , f.name as faculty FROM departments as d left join college as c on d.college=c.id left join users as u on d.department_chair=u.id left join faculties as f on d.faculty=f.id";
                         $columns = array("Department", "College", "DepartmentChair", "Faculty");
-                        showMultipleResultsData($sql, $columns);
+                        $buttons=array(
+                            "updateDepartment"=>array("color"=>"primary","label"=>"Update"),
+                            "deleteDepartment"=>array("color"=>"danger","label"=>"Delete")
+                        );
+                        showMultipleResultsData($sql, $columns, $buttons);
                     } else if($_GET['data'] == "faculties"){
                        // show faculties
                        $sql="SELECT f.id as id, f.name as faculty , c.college_name as college FROM faculties as f left join college as c on f.college=c.id";
@@ -124,4 +128,40 @@ if(isset($_POST['submit']) && $_POST['operation'] == 'save'){
     </div>
 </body>
 </html>
+
+<script>
+    $("button.btn-primary > a").click(function(e){
+        e.preventDefault();
+
+       // let inputs = $(this).closest('tr').find('input');
+
+        var inputs_values = $(this).closest('tr').find('input').map(function() {
+            return $(this).val();
+        }).get();
+
+        let inputs_keys = <?php echo json_encode($columns); ?>;
+
+        let id = $(this).closest('tr').find('th').html();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const table = urlParams.get('data');
+
+        let button = $(this).parent();
+
+        $.ajax({
+            url: "../update_handler.php",
+            method: "post",
+            data: {command:"update", table, inputs_keys, inputs_values, id},
+            success: function(result){
+                if(result == "success") {
+                    console.log($(this));
+                    button.replaceWith("<p style=\"color: green;\">Updated successfully</p>");
+                }
+                else alert("There was an error processing your request.");
+            }
+        });
+
+
+    });
+</script>
 

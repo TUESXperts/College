@@ -34,8 +34,7 @@ include("../common-functions.php");
         $columns = array("Course", "Department");
         // prepare custom buttons
         $buttons=array(
-            "updateStudentsForCourse"=>array("color"=>"success","label"=>"Edit"),
-            "delete"=>array("color"=>"danger","label"=>"Delete")
+            "updateStudentsForCourse"=>array("color"=>"success","label"=>"Edit")
         );
         showMultipleResultsData($sql, $columns, $buttons);
         ?>

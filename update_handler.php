@@ -1,5 +1,7 @@
 <?php
 include("./includes/connection.php");
+include("./common-functions.php");
+
 
 if(isset($_GET['command'])){
     $get_command = $_GET['command'];
@@ -23,6 +25,22 @@ if(isset($_GET['command'])){
             echo "success";
             exit;
         }
+    } else if($post_command=='update') {
+        $table = $_POST['table'];
+        $inputs_keys = $_POST['inputs_keys'];
+        $inputs_values = $_POST['inputs_values'];
+        $result_string = generateResultUpdateQuery($inputs_keys,$inputs_values);
+
+        //$sql="update $table set $result_string";
+    }
+}
+
+function generateResultUpdateQuery($inputs_keys, $inputs_values){
+    $inputs_keys = transformColumnsToLowercase($inputs_keys);
+
+    $sql_string = "";
+    foreach($inputs_keys as $key){
+   //     $sql_string .= $key
     }
 }
 ?>
