@@ -32,6 +32,15 @@ if(isset($_GET['command'])){
         $result_string = generateResultUpdateQuery($inputs_keys,$inputs_values);
 
         //$sql="update $table set $result_string";
+    } else if($post_command=='delete'){
+        $table = $_POST['table'];
+        $id = $_POST['id'];
+
+        $sql = "delete from $table where id='$id'";
+        $result = mysqli_query($connect, $sql);
+        if($result) echo "success";
+        else echo "error";
+        exit;
     }
 }
 
@@ -43,4 +52,6 @@ function generateResultUpdateQuery($inputs_keys, $inputs_values){
    //     $sql_string .= $key
     }
 }
+
+
 ?>

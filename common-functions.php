@@ -62,7 +62,7 @@ function showMultipleResultsData($sql, $columns, $buttons="default"){
                 if($_SESSION['role'] == "admin"){
                     foreach($columnsLowercase as $column){
                         ?>
-                        <td><input name="<?=$column?>" value="<?=$$column?>"\></td>
+                        <td><?=$$column?></td>
                         <?php
                     }
                 } else {
@@ -99,7 +99,3 @@ function transformColumnsToLowercase($columns){
     return $resultLowercaseColumns;
 }
 ?>
-
-<script>
-
-</script>

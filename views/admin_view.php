@@ -12,6 +12,10 @@ include("../includes/connection.php");
 include("../common-functions.php");
 
 
+if(isset($_GET['added'])){ // IF ENTITY IS BEING ADDED SUCCESSFULLY
+    if($_GET['added'] == "success") echo "OK";
+}
+
 if(isset($_POST['submit']) && $_POST['operation'] == 'save'){
     extract($_POST);
     if($table == "college") {
@@ -56,6 +60,22 @@ if(isset($_POST['submit']) && $_POST['operation'] == 'save'){
                 <a class="dropdown-item" href="<?=$_SERVER['PHP_SELF'] .'?data=students'?>">Students</a>
                 <a class="dropdown-item" href="<?=$_SERVER['PHP_SELF'] .'?data=courses'?>">Courses</a>
             </div>
+
+            <?php
+            if(isset($_GET['data'])){
+                if($_GET['data'] == "departments") $button_text = "department";
+                else if($_GET['data'] == "faculties") $button_text = "faculty";
+                else if($_GET['data'] == "professors") $button_text = "professor";
+                else if($_GET['data'] == "students") $button_text = "student";
+                else if($_GET['data'] == "courses") $button_text = "course";
+
+                if($_GET['data'] != "college" and $_GET['data'] != "chancellor"){
+                ?>
+                <button class="btn btn-dark" style="width: max-content;"><a href="/College/addHandler.php?show=<?=$button_text?>" class="text-light"><img src="../static/icons/plus.png" style="height: 25px;"/> Add new <?=$button_text?></a></button>
+            <?php
+                }
+            }
+            ?>
         </div>
 
                 <?php
@@ -86,7 +106,6 @@ if(isset($_POST['submit']) && $_POST['operation'] == 'save'){
                         $sql="SELECT d.id as id, d.name as department , c.college_name as college, u.firstname as departmentchair , f.name as faculty FROM departments as d left join college as c on d.college=c.id left join users as u on d.department_chair=u.id left join faculties as f on d.faculty=f.id";
                         $columns = array("Department", "College", "DepartmentChair", "Faculty");
                         $buttons=array(
-                            "updateDepartment"=>array("color"=>"primary","label"=>"Update"),
                             "deleteDepartment"=>array("color"=>"danger","label"=>"Delete")
                         );
                         showMultipleResultsData($sql, $columns, $buttons);
@@ -94,7 +113,10 @@ if(isset($_POST['submit']) && $_POST['operation'] == 'save'){
                        // show faculties
                        $sql="SELECT f.id as id, f.name as faculty , c.college_name as college FROM faculties as f left join college as c on f.college=c.id";
                        $columns = array("Faculty", "College");
-                       showMultipleResultsData($sql, $columns);
+                        $buttons=array(
+                            "deleteDepartment"=>array("color"=>"danger","label"=>"Delete")
+                        );
+                       showMultipleResultsData($sql, $columns, $buttons);
                     } else if($_GET['data'] == "chancellor"){
                         // show chancellor
                         $chancellorTableName = "users";
@@ -110,17 +132,26 @@ if(isset($_POST['submit']) && $_POST['operation'] == 'save'){
                         // show professors
                         $sql="SELECT u.id, u.firstname, u.surname, u.username, d.name as department FROM users as u left join departments as d on u.department = d.id where u.role='teacher'";
                         $columns = array("Firstname", "Surname", "Username", "Department");
-                        showMultipleResultsData($sql, $columns);
+                        $buttons=array(
+                            "deleteDepartment"=>array("color"=>"danger","label"=>"Delete")
+                        );
+                        showMultipleResultsData($sql, $columns, $buttons);
                     } else if($_GET['data'] == "students"){
                         // show students
                         $sql="SELECT u.id, u.firstname, u.surname, u.username, d.name as department FROM users as u left join departments as d on u.department = d.id where u.role='student'";
                         $columns = array("Firstname", "Surname", "Username", "Department");
-                        showMultipleResultsData($sql, $columns);
+                        $buttons=array(
+                            "deleteDepartment"=>array("color"=>"danger","label"=>"Delete")
+                        );
+                        showMultipleResultsData($sql, $columns, $buttons);
                     } else if($_GET['data'] == "courses"){
                         // show courses
                         $sql="SELECT c.id, c.name as course, u.firstname as teacher, d.name as department FROM courses as c left join users as u on c.teacher=u.id left join departments as d on c.department = d.id";
                         $columns = array("Course", "Teacher", "Department");
-                        showMultipleResultsData($sql, $columns);
+                        $buttons=array(
+                            "deleteDepartment"=>array("color"=>"danger","label"=>"Delete")
+                        );
+                        showMultipleResultsData($sql, $columns, $buttons);
                     }
                 }
                 ?>
@@ -160,8 +191,31 @@ if(isset($_POST['submit']) && $_POST['operation'] == 'save'){
                 else alert("There was an error processing your request.");
             }
         });
-
-
     });
+
+    $("button.btn-danger > a").click(function(e){
+        e.preventDefault();
+
+        let id = $(this).closest('tr').find('th').html();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const table = urlParams.get('data');
+
+        let button = $(this).parent();
+
+        $.ajax({
+            url: "../update_handler.php",
+            method: "post",
+            data: {command:"delete", table, id},
+            success: function(result){
+                if(result == "success") {
+                    button.replaceWith("<p style=\"color: red;\">Deleted successfully</p>");
+                }
+                else alert("There was an error processing your request.");
+            }
+        });
+    });
+
+
 </script>
 
