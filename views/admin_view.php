@@ -138,10 +138,10 @@ if(isset($_POST['submit']) && $_POST['operation'] == 'save'){
                         showMultipleResultsData($sql, $columns, $buttons);
                     } else if($_GET['data'] == "students"){
                         // show students
-                        $sql="SELECT u.id, u.firstname, u.surname, u.username, d.name as department FROM users as u left join departments as d on u.department = d.id where u.role='student'";
-                        $columns = array("Firstname", "Surname", "Username", "Department");
+                        $sql="SELECT u.id, u.firstname, u.surname, u.username, u.password, d.name as department FROM users as u left join departments as d on u.department = d.id where u.role='student'";
+                        $columns = array("Firstname", "Surname", "Username", "Password", "Department");
                         $buttons=array(
-                            "deleteDepartment"=>array("color"=>"danger","label"=>"Delete")
+                            "deleteStudent"=>array("color"=>"danger","label"=>"Delete")
                         );
                         showMultipleResultsData($sql, $columns, $buttons);
                     } else if($_GET['data'] == "courses"){
@@ -149,7 +149,7 @@ if(isset($_POST['submit']) && $_POST['operation'] == 'save'){
                         $sql="SELECT c.id, c.name as course, u.firstname as teacher, d.name as department FROM courses as c left join users as u on c.teacher=u.id left join departments as d on c.department = d.id";
                         $columns = array("Course", "Teacher", "Department");
                         $buttons=array(
-                            "deleteDepartment"=>array("color"=>"danger","label"=>"Delete")
+                            "deleteCourse"=>array("color"=>"danger","label"=>"Delete")
                         );
                         showMultipleResultsData($sql, $columns, $buttons);
                     }
