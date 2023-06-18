@@ -15,9 +15,7 @@ include("./includes/connection.php");
             if($result) header('location: /College/views/admin_view.php?added=success');
             else header('location: /College/views/admin_view.php?added=error');
             exit;
-        }
-
-        if($type=="student"){
+        } else if($type=="student"){
             $firstname = $_POST['firstname'];
             $surname = $_POST['surname'];
             $username = $_POST['username'];
@@ -30,9 +28,21 @@ include("./includes/connection.php");
             if($result) header('location: /College/views/admin_view.php?added=success');
             else header('location: /College/views/admin_view.php?added=error');
             exit;
-        }
+        } else if($type=="professor"){
+            $firstname = $_POST['firstname'];
+            $surname = $_POST['surname'];
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+            $departmentSelected = $_POST['departmentSelected'];
+            $role = "teacher";
 
-        if($type=="teacher"){
+            $sql = "insert into users set firstname='$firstname', surname='$surname', username='$username', password='$password', role='$role', department='$departmentSelected' ";
+            $result = mysqli_query($connect, $sql);
+            if($result) header('location: /College/views/admin_view.php?added=success');
+            else header('location: /College/views/admin_view.php?added=error');
+            exit;
+        }
+        else if($type=="course"){
             $courseSelected = $_POST['courseSelected'];
             $teacherSelected = $_POST['teacherSelected'];
             $departmentSelected = $_POST['departmentSelected'];
@@ -42,6 +52,16 @@ include("./includes/connection.php");
             if($result) header('location: /College/views/admin_view.php?added=success');
             else header('location: /College/views/admin_view.php?added=error');
             exit;
+        } else if($type=="faculty"){
+            $name = $_POST['name'];
+            $collegeSelected = $_POST['collegeSelected'];
+
+            $sql = "insert into faculties set name='$name', college='$collegeSelected'";
+            $result = mysqli_query($connect, $sql);
+            if($result) header('location: /College/views/admin_view.php?added=success');
+            else header('location: /College/views/admin_view.php?added=error');
+            exit;
+
         }
     }
 
@@ -107,9 +127,7 @@ include("./includes/connection.php");
 </div>
 </div>
 <?php
-}
-
-if($_GET['show'] == "student"){
+} else if($_GET['show'] == "student"){
 
     $departments = getDepartments();
     print_r($departments);
@@ -165,9 +183,7 @@ if($_GET['show'] == "student"){
 </div>
 </div>
 <?php
-}
-
-if($_GET['show'] == "course"){
+} else if($_GET['show'] == "course"){
 
     $courses = getCourses();
     print_r($courses);
@@ -226,7 +242,7 @@ if($_GET['show'] == "course"){
                                 ?>
                             </select>
                         </div>
-                        <input type="hidden" name="type" value="teacher">
+                        <input type="hidden" name="type" value="course">
                         <button type="submit" class="btn btn-primary" name="save">Save</button>
                 </form>
             </div>
@@ -235,9 +251,107 @@ if($_GET['show'] == "course"){
 </div>
 </div>
 <?php
-}
+} else if($_GET['show'] == "faculty"){
 
-    function getColleges(){
+        $colleges = getColleges();
+        print_r($colleges);
+    ?>
+    <div class="container">
+        <div class="col-md-12">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-6 shadow-sm" style="margin-top:100px;">
+                    <form method="post">
+                        <div class="container my-5">
+                            <p style = "line-height:1.4">
+                                <button class="btn btn-dark"><a href="/College/views/admin_view.php" class="text-light">Go back</a></button>
+                            </p>
+
+                            <div class="form-group">
+                                <label for="name">Faculty name</label>
+                                <input type="text" class="form-control" id="name" name="name" autocomplete="off" placeholder="Enter faculty...">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="surname">College</label>
+                                <select name="collegeSelected" id="colleges">
+                                    <option selected values="null">Choose a college</option>
+                                    <?php
+                                    foreach($colleges as $college){
+                                        echo '<option value="' . $college['id'] . '">' . $college['college_name'] . '</option>';
+                                    }
+                                    ?>
+                                    ?>
+                                </select>
+                            </div>
+
+                            <input type="hidden" name="type" value="faculty">
+                            <button type="submit" class="btn btn-primary" name="save">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <?php
+} else if($_GET['show'] == "professor"){
+
+        $departments = getDepartments();
+        print_r($departments);
+        ?>
+        <div class="container">
+            <div class="col-md-12">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-6 shadow-sm" style="margin-top:100px;">
+                        <form method="post">
+                            <div class="container my-5">
+                                <p style = "line-height:1.4">
+                                    <button class="btn btn-dark"><a href="/College/views/admin_view.php" class="text-light">Go back</a></button>
+                                </p>
+
+                                <div class="form-group">
+                                    <label for="firstname">Firstname</label>
+                                    <input type="text" class="form-control" id="name" name="firstname" autocomplete="off" placeholder="Enter firstname...">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="surname">Surname</label>
+                                    <input type="text" class="form-control" id="name" name="surname" autocomplete="off" placeholder="Enter surname...">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input type="text" class="form-control" id="name" name="username" autocomplete="off" placeholder="Enter username...">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="text" class="form-control" id="name" name="password" autocomplete="off" placeholder="Enter password...">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="department">Department</label>
+                                    <select name="departmentSelected" id="departments">
+                                        <option selected values="null">Choose a department</option>
+                                        <?php
+                                        foreach($departments as $id=>$department){
+                                            echo '<option value="' . $department['id'] . '">' . $department['department_name'] . '</option>';
+                                        }
+                                        ?>
+                                        ?>
+                                    </select>
+                                </div>
+                                <input type="hidden" name="type" value="professor">
+                                <button type="submit" class="btn btn-primary" name="save">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <?php
+    }
+
+function getColleges(){
         global $connect;
         $colleges = [];
         $sql = "select id,college_name from college";

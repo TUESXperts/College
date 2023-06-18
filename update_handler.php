@@ -39,6 +39,7 @@ if(isset($_GET['command'])){
         $sql = "delete from $table where id='$id'";
 
         if($table == "students") $sql = "delete from users where role='student' and  id='$id'";
+        else if($table == "professors")  $sql = "delete from users where role='teacher' and  id='$id'";
         $result = mysqli_query($connect, $sql);
         if($result) echo "success";
         else echo "error";
