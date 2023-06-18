@@ -91,7 +91,7 @@ include("./includes/connection.php");
                             <select name="facultySelected" id="faculties">
                                 <option selected values="null">Choose a faculty</option>
                                 <?php
-                                foreach($faculties as $id=>$faculty){
+                                foreach($faculties as $faculty){
                                     echo '<option value="' . $faculty['id'] . '">' . $faculty['faculty_name'] . '</option>';
                                 }
                                 ?>
